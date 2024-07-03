@@ -15,6 +15,7 @@ public class Sale {
     private Double taxMunicipal;
 
     public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Integer discount, Double taxICMS, Double taxMunicipal) {
+        this.code = UUID.randomUUID();
         this.date = date;
         this.customer = customer;
         this.itens = itens;

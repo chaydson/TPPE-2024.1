@@ -4,8 +4,6 @@ import org.example.model.Customer;
 import org.example.model.Product;
 import org.example.model.Sale;
 
-import java.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,28 +25,34 @@ public class SaleController {
     public void createSale() {
         System.out.println("Creating Sale...");
         System.out.println("Enter the sale date in the format dd/MM/yyyy");
-        scanner.nextLine();
         String date = scanner.nextLine();
         String cpf;
         do {
             System.out.println("Enter customer CPF:");
             cpf = scanner.nextLine();
         } while (!verifyCustomer(cpf));
+
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
-            count++;
             Integer product = scanner.nextInt();
-            for (Product p : productController.getProducts()) {
-                if (p.getCode().equals(product)) {
-                    System.out.println("Item added successfully: " + p.getDescription());
-                    itens.add(p);
-                }
+
+            Product foundedProduct = checkProduct(product);
+
+            if (foundedProduct != null) {
+                System.out.println("Item added successfully: " + foundedProduct.getDescription());
+                itens.add(foundedProduct);
+                count++;
+            } else {
+                System.out.println("Product not found");
             }
+
             System.out.println("Do you want to add another product? (y/n)");
             scanner.nextLine();
             String answer = scanner.nextLine();
-            if (answer.equals("n")) {
+            if (answer.equals("n") && !itens.isEmpty()) {
                 insertingProduct = false;
+            } else if (answer.equals("n")) {
+                System.out.println("You must add at least one product.");
             }
         }
 
@@ -95,5 +99,14 @@ public class SaleController {
             }
         }
         return false;
+    }
+
+    public Product checkProduct(Integer productId) {
+        for (Product p : productController.getProducts()) {
+            if (p.getCode().equals(productId)) {
+                return p;
+            }
+        }
+        return null;
     }
 }
