@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.sale;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,13 +10,13 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class SaleControllerTest {
+public class ShippingPriceTest {
 
     private final boolean isCapital;
     private final String region;
     private final double expectedShipping;
 
-    public SaleControllerTest(boolean isCapital, String region, double expectedShipping) {
+    public ShippingPriceTest(boolean isCapital, String region, double expectedShipping) {
         this.isCapital = isCapital;
         this.region = region;
         this.expectedShipping = expectedShipping;

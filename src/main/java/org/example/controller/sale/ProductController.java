@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.sale;
 
 import org.example.model.Product;
 

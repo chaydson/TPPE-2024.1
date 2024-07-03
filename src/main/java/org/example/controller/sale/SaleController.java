@@ -1,10 +1,8 @@
-package org.example.controller;
+package org.example.controller.sale;
 
 import org.example.model.Customer;
 import org.example.model.Product;
 import org.example.model.Sale;
-
-import java.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,31 +25,42 @@ public class SaleController {
     public void createSale() {
         System.out.println("Creating Sale...");
         System.out.println("Enter the sale date in the format dd/MM/yyyy");
-        scanner.nextLine();
         String date = scanner.nextLine();
-        System.out.println("Enter customer CPF:");
-        String cpf = scanner.nextLine();
+        String cpf;
+        do {
+            System.out.println("Enter customer CPF:");
+            cpf = scanner.nextLine();
+        } while (!verifyCustomer(cpf));
+
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
-            count++;
             Integer product = scanner.nextInt();
-            for (Product p : productController.getProducts()) {
-                if (p.getCode().equals(product)) {
-                    System.out.println("Item added successfully: " + p.getDescription());
-                    itens.add(p);
-                }
+
+            Product foundedProduct = checkProduct(product);
+
+            if (foundedProduct != null) {
+                System.out.println("Item added successfully: " + foundedProduct.getDescription());
+                itens.add(foundedProduct);
+                count++;
+            } else {
+                System.out.println("Product not found");
             }
+
             System.out.println("Do you want to add another product? (y/n)");
             scanner.nextLine();
             String answer = scanner.nextLine();
-            if (answer.equals("n")) { insertingProduct = false; }
+            if (answer.equals("n") && !itens.isEmpty()) {
+                insertingProduct = false;
+            } else if (answer.equals("n")) {
+                System.out.println("You must add at least one product.");
+            }
         }
 
         System.out.println("Enter Payment Method:");
         String paymentMethod = scanner.nextLine();
         System.out.println("Enter Discount:");
         Integer discount = scanner.nextInt();
-        
+
         Customer customer =  new Customer();
 
         for (Customer c : customerController.getCustomers()) {
@@ -102,5 +111,23 @@ public class SaleController {
         totalValue = (1 + icmsTax) * totalValue + (1 + municipalTax) * totalValue + shipping + totalValue;
 
         return totalValue;
+    }
+
+    public boolean verifyCustomer(String cpf){
+        for (Customer c : customerController.getCustomers()) {
+            if (c.getCpf().equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Product checkProduct(Integer productId) {
+        for (Product p : productController.getProducts()) {
+            if (p.getCode().equals(productId)) {
+                return p;
+            }
+        }
+        return null;
     }
 }
