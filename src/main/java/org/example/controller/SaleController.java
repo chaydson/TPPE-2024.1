@@ -51,11 +51,7 @@ public class SaleController {
         String paymentMethod = scanner.nextLine();
         System.out.println("Enter Discount:");
         Integer discount = scanner.nextInt();
-        System.out.println("Enter ICMS:");
-        Double icms = scanner.nextDouble();
-        System.out.println("Enter Municipal Tax:");
-        Double municipalTax = scanner.nextDouble();
-
+        
         Customer customer =  new Customer();
 
         for (Customer c : customerController.getCustomers()) {
@@ -64,9 +60,13 @@ public class SaleController {
             }
         }
 
-        Double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion());
+        double icmsTax = calculateTaxes(customer.getAddress().getRegion())[0];
+        double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
+        double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion());
 
-        Sale sale = new Sale(date, customer, itens, paymentMethod, shipping, discount, icms, municipalTax);
+        double totalValue = calculateTotalValue(shipping, icmsTax, municipalTax);
+
+        Sale sale = new Sale(date, customer, itens, paymentMethod, shipping, discount, icmsTax, municipalTax, totalValue);
 
         sales.add(sale);
         System.out.println("Sale created successfully");
@@ -81,5 +81,26 @@ public class SaleController {
             case "Sudeste" -> isCapital ? 7.0 : 10.0;
             default -> 0.0;
         };
+    }
+
+    public double[] calculateTaxes(String region){
+        double[] results = new double[2];
+        if(region.equals("Distrito Federal")){
+            results[0] = 0.18;
+        } else {
+            results[0] = 0.12;
+            results[1] = 0.4;
+        }
+        return results;
+    }
+
+    public double calculateTotalValue(double shipping, double icmsTax, double municipalTax){
+        double totalValue = 0;
+
+        for (Product p : itens) { totalValue += p.getValue(); }
+
+        totalValue = (1 + icmsTax) * totalValue + (1 + municipalTax) * totalValue + shipping + totalValue;
+
+        return totalValue;
     }
 }

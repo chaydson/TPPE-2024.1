@@ -11,10 +11,12 @@ public class Sale {
     private String paymentMethod;
     private Double shipment;
     private Integer discount;
-    private Double taxICMS;
-    private Double taxMunicipal;
+    private double taxICMS;
+    private double taxMunicipal;
+    private Double total;
 
-    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Integer discount, Double taxICMS, Double taxMunicipal) {
+    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Integer discount, double taxICMS, double taxMunicipal, Double total) {
+        this.code = UUID.randomUUID();
         this.date = date;
         this.customer = customer;
         this.itens = itens;
@@ -23,6 +25,7 @@ public class Sale {
         this.discount = discount;
         this.taxICMS = taxICMS;
         this.taxMunicipal = taxMunicipal;
+        this.total = total;
     }
 
     public UUID getCode() {
@@ -81,20 +84,28 @@ public class Sale {
         this.discount = discount;
     }
 
-    public Double getTaxICMS() {
+    public double getTaxICMS() {
         return taxICMS;
     }
 
-    public void setTaxICMS(Double taxICMS) {
+    public void setTaxICMS(int taxICMS) {
         this.taxICMS = taxICMS;
     }
 
-    public Double getTaxMunicipal() {
+    public double getTaxMunicipal() {
         return taxMunicipal;
     }
 
-    public void setTaxMunicipal(Double taxMunicipal) {
+    public void setTaxMunicipal(int taxMunicipal) {
         this.taxMunicipal = taxMunicipal;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
     @Override
@@ -109,6 +120,7 @@ public class Sale {
                 ", discount=" + discount +
                 ", taxICMS=" + taxICMS +
                 ", taxMunicipal=" + taxMunicipal +
+                ", total=" + total +
                 '}';
     }
 }
