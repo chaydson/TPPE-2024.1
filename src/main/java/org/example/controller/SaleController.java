@@ -33,10 +33,10 @@ public class SaleController {
         System.out.println("Enter customer CPF:");
         String cpf = scanner.nextLine();
         while (insertingProduct) {
-            System.out.println("Enter the " + count + "º Product name:");
-            String product = scanner.nextLine();
+            System.out.println("Enter the " + count + "º Product Code:");
+            Integer product = scanner.nextInt();
             for (Product p : productController.getProducts()) {
-                if (p.getDescription().equals(product)) {
+                if (p.getCode().equals(product)) {
                     itens.add(p);
                 }
             }
