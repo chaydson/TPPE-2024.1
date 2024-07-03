@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.sale;
 
 import org.example.model.Customer;
 import org.example.model.Product;
@@ -29,8 +29,11 @@ public class SaleController {
         System.out.println("Enter the sale date in the format dd/MM/yyyy");
         scanner.nextLine();
         String date = scanner.nextLine();
-        System.out.println("Enter customer CPF:");
-        String cpf = scanner.nextLine();
+        String cpf;
+        do {
+            System.out.println("Enter customer CPF:");
+            cpf = scanner.nextLine();
+        } while (!verifyCustomer(cpf));
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
             count++;
@@ -44,7 +47,9 @@ public class SaleController {
             System.out.println("Do you want to add another product? (y/n)");
             scanner.nextLine();
             String answer = scanner.nextLine();
-            if (answer.equals("n")) { insertingProduct = false; }
+            if (answer.equals("n")) {
+                insertingProduct = false;
+            }
         }
 
         System.out.println("Enter Payment Method:");
@@ -56,7 +61,7 @@ public class SaleController {
         System.out.println("Enter Municipal Tax:");
         Double municipalTax = scanner.nextDouble();
 
-        Customer customer =  new Customer();
+        Customer customer = new Customer();
 
         for (Customer c : customerController.getCustomers()) {
             if (c.getCpf().equals(cpf)) {
@@ -81,5 +86,14 @@ public class SaleController {
             case "Sudeste" -> isCapital ? 7.0 : 10.0;
             default -> 0.0;
         };
+    }
+
+    public boolean verifyCustomer(String cpf){
+        for (Customer c : customerController.getCustomers()) {
+            if (c.getCpf().equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
