@@ -108,7 +108,7 @@ public class SaleController {
 
         for (Product p : itens) { totalValue += p.getValue(); }
 
-        totalValue = (1 + icmsTax) * totalValue + (1 + municipalTax) * totalValue + shipping + totalValue;
+        totalValue = (icmsTax * totalValue) + (municipalTax * totalValue) + shipping + totalValue;
 
         return totalValue;
     }
