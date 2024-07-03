@@ -12,6 +12,29 @@ public class ProductController {
 
     public ProductController() {
         this.products = new ArrayList<>();
+        Product product1 = new Product("Tenis Nike Preto", 1599.99, "1 unidade");
+        Product product2 = new Product("Camisa Adidas Branca", 199.99, "1 unidade");
+        Product product3 = new Product("Calça Jeans Levi's Azul", 299.99, "1 unidade");
+        Product product4 = new Product("Relógio Casio Digital", 499.99, "1 unidade");
+        Product product5 = new Product("Mochila Nike Preta", 399.99, "1 unidade");
+        Product product6 = new Product("Jaqueta Puma Vermelha", 599.99, "1 unidade");
+        Product product7 = new Product("Óculos de Sol Ray-Ban", 799.99, "1 unidade");
+        Product product8 = new Product("Boné New Era Azul", 99.99, "1 unidade");
+        Product product9 = new Product("Bermuda Oakley Preta", 249.99, "1 unidade");
+        Product product10 = new Product("Tênis Asics Branco", 699.99, "1 unidade");
+        Product product11 = new Product("Chinelo Havaianas Verde", 49.99, "1 unidade");
+        products.add(product1);
+        products.add(product2);
+        products.add(product3);
+        products.add(product4);
+        products.add(product5);
+        products.add(product6);
+        products.add(product7);
+        products.add(product8);
+        products.add(product9);
+        products.add(product10);
+        products.add(product11);
+
     }
 
     public List<Product> getProducts() {

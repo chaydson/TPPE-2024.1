@@ -14,6 +14,29 @@ public class CustomerController {
 
     public CustomerController() {
         this.customers = new ArrayList<>();
+        Address address = new Address("Centro-oeste", true);
+        Customer customer1 = new Customer("Lucas", "08415758196", "61991890585", false, "lucas@gmail.com", address);
+        Customer customer2 = new Customer("Maria", "12345678901", "61991234567", false, "maria@gmail.com", address);
+        Customer customer3 = new Customer("João", "23456789012", "61992345678", false, "joao@gmail.com", address);
+        Customer customer4 = new Customer("Ana", "34567890123", "61993456789", false, "ana@gmail.com", address);
+        Customer customer5 = new Customer("Pedro", "45678901234", "61994567890", false, "pedro@gmail.com", address);
+        Customer customer6 = new Customer("Mariana", "56789012345", "61995678901", false, "mariana@gmail.com", address);
+        Customer customer7 = new Customer("Carlos", "67890123456", "61996789012", false, "carlos@gmail.com", address);
+        Customer customer8 = new Customer("Fernanda", "78901234567", "61997890123", false, "fernanda@gmail.com", address);
+        Customer customer9 = new Customer("Paulo", "89012345678", "61998901234", false, "paulo@gmail.com", address);
+        Customer customer10 = new Customer("Julia", "90123456789", "61999012345", false, "julia@gmail.com", address);
+        Customer customer11 = new Customer("Rafael", "01234567890", "61999123456", false, "rafael@gmail.com", address);
+        customers.add(customer1);
+        customers.add(customer2);
+        customers.add(customer3);
+        customers.add(customer4);
+        customers.add(customer5);
+        customers.add(customer6);
+        customers.add(customer7);
+        customers.add(customer8);
+        customers.add(customer9);
+        customers.add(customer10);
+        customers.add(customer11);
     }
 
     public List<Customer> getCustomers() {
