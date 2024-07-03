@@ -34,6 +34,7 @@ public class SaleController {
         String cpf = scanner.nextLine();
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
+            count++;
             Integer product = scanner.nextInt();
             for (Product p : productController.getProducts()) {
                 if (p.getCode().equals(product)) {
