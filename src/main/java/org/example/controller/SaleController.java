@@ -14,8 +14,8 @@ public class SaleController {
     private static final Scanner scanner = new Scanner(System.in);
     private final List<Sale> sales;
 
-    private static final CustomerController customerController = new CustomerController();
-    private static final ProductController productController = new ProductController();
+    public static final CustomerController customerController = new CustomerController();
+    public static final ProductController productController = new ProductController();
 
     public SaleController() { this.sales = new ArrayList<>(); }
 

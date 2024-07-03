@@ -1,15 +1,11 @@
 package org.example;
 
-import org.example.controller.CustomerController;
-import org.example.controller.ProductController;
 import org.example.controller.SaleController;
 
 import java.util.*;
 
 public class TerminalApp {
 
-    private static final CustomerController customerController = new CustomerController();
-    private static final ProductController productController = new ProductController();
     private static final SaleController saleController = new SaleController();
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -31,16 +27,16 @@ public class TerminalApp {
 
             switch (choice) {
                 case 1:
-                    customerController.createCustomer();
+                    SaleController.customerController.createCustomer();
                     break;
                 case 2:
-                    System.out.print(customerController.getCustomers());
+                    System.out.print(SaleController.customerController.getCustomers());
                     break;
                 case 3:
-                    productController.createProduct();
+                    SaleController.productController.createProduct();
                     break;
                 case 4:
-                    System.out.print(productController.getProducts());
+                    System.out.print(SaleController.productController.getProducts());
                     break;
                 case 5:
                     saleController.createSale();
