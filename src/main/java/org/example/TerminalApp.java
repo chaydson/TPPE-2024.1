@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.controller.CustomerController;
 import org.example.controller.ProductController;
+import org.example.controller.SaleController;
 
 import java.util.*;
 
@@ -9,6 +10,7 @@ public class TerminalApp {
 
     private static final CustomerController customerController = new CustomerController();
     private static final ProductController productController = new ProductController();
+    private static final SaleController saleController = new SaleController();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void run() {
@@ -19,7 +21,9 @@ public class TerminalApp {
             System.out.println("2. List Customer");
             System.out.println("3. Create Product");
             System.out.println("4. List Product");
-            System.out.println("5. Exit");
+            System.out.println("5. Create Sale");
+            System.out.println("6. List Sale");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -39,11 +43,17 @@ public class TerminalApp {
                     System.out.print(productController.getProducts());
                     break;
                 case 5:
+                    saleController.createSale();
+                    break;
+                case 6:
+                    System.out.println(saleController.getSales());;
+                    break;
+                case 7:
                     exit = true;
                     System.out.println("Exiting Terminal...");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter a number from 1 to 5.");
+                    System.out.println("Invalid choice. Please enter a number from 1 to 7.");
                     break;
             }
         }

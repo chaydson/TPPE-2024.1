@@ -8,6 +8,8 @@ public class Customer {
     private String email;
     private Address address;
 
+    public Customer() {}
+
     // Constructor
     public Customer(String name, String cpf, String phone, boolean special, String email, Address address) {
         this.name = name;
