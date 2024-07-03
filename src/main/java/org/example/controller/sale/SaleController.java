@@ -1,6 +1,7 @@
 package org.example.controller.sale;
 
 import org.example.model.Customer;
+import org.example.model.PrimeCustomer;
 import org.example.model.Product;
 import org.example.model.Sale;
 
@@ -71,7 +72,7 @@ public class SaleController {
 
         double icmsTax = calculateTaxes(customer.getAddress().getRegion())[0];
         double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
-        double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion());
+        double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion(), customer);
 
         double totalValue = calculateTotalValue(shipping, icmsTax, municipalTax);
 
@@ -81,15 +82,19 @@ public class SaleController {
         System.out.println("Sale created successfully");
     }
 
-    public double calculateShipping(boolean isCapital, String region) {
-        return switch (region) {
-            case "Distrito Federal" -> isCapital ? 5.0 : 0.0;
-            case "Centro-oeste", "Sul" -> isCapital ? 10.0 : 13.0;
-            case "Nordeste" -> isCapital ? 15.0 : 18.0;
-            case "Norte" -> isCapital ? 20.0 : 15.0;
-            case "Sudeste" -> isCapital ? 7.0 : 10.0;
-            default -> 0.0;
-        };
+    public double calculateShipping(boolean isCapital, String region, Customer customer) {
+        if (customer instanceof PrimeCustomer) {
+            return 0.0;
+        } else {
+            return switch (region) {
+                case "Distrito Federal" -> isCapital ? 5.0 : 0.0;
+                case "Centro-oeste", "Sul" -> isCapital ? 10.0 : 13.0;
+                case "Nordeste" -> isCapital ? 15.0 : 18.0;
+                case "Norte" -> isCapital ? 20.0 : 15.0;
+                case "Sudeste" -> isCapital ? 7.0 : 10.0;
+                default -> 0.0;
+            };
+        }
     }
 
     public double[] calculateTaxes(String region){

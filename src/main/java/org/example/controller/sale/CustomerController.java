@@ -15,7 +15,7 @@ public class CustomerController {
     public CustomerController() {
         this.customers = new ArrayList<>();
         Address address = new Address("Centro-oeste", true);
-        Customer customer1 = new Customer("Lucas", "08415758196", "61991890585", false, "lucas@gmail.com", address);
+        Customer customer1 = new PrimeCustomer("Lucas", "08415758196", "61991890585", false, "lucas@gmail.com", address, 10);
         Customer customer2 = new Customer("Maria", "12345678901", "61991234567", false, "maria@gmail.com", address);
         Customer customer3 = new Customer("João", "23456789012", "61992345678", false, "joao@gmail.com", address);
         Customer customer4 = new Customer("Ana", "34567890123", "61993456789", false, "ana@gmail.com", address);
