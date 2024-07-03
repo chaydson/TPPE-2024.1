@@ -98,7 +98,7 @@ public class SaleController {
             results[0] = 0.18;
         } else {
             results[0] = 0.12;
-            results[1] = 0.4;
+            results[1] = 0.04;
         }
         return results;
     }
