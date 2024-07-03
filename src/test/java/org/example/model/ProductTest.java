@@ -4,31 +4,87 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 
-import java.util.UUID;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runners.Parameterized.Parameter;
 
+@RunWith(Parameterized.class)
 public class ProductTest {
+
+    @Parameters(name = "{index}: {1} {2} {3} -> {4}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { null, -10.0, "kg", "Value cannot be negative or null" },
+                { null, null, "kg", "Value cannot be negative or null" },
+                { null, 10.0, null, "Unit cannot be null or empty" },
+                { null, 10.0, "", "Unit cannot be null or empty" },
+                { null, 10.0, "kg", "Description cannot be null or empty" },
+                { "", 10.0, "kg", "Description cannot be null or empty" },
+                { "Camiseta Branca", 10.0, null, "Unit cannot be null or empty" },
+                { "Fones de Ouvido", 10.0, "", "Unit cannot be null or empty" },
+                { "Mochila Escolar", null, "kg", "Value cannot be negative or null" },
+                { "Capa de Celular", -10.0, "kg", "Value cannot be negative or null" },
+                { null, 10.0, "kg", "Description cannot be null or empty" },
+                { "", 10.0, "kg", "Description cannot be null or empty" },
+        });
+    }
+
+    @Parameter(0)
+    public String description;
+
+    @Parameter(1)
+    public Double value;
+
+    @Parameter(2)
+    public String unit;
+
+    @Parameter(3)
+    public String expectedMessage;
+
+    @Test
+    public void testInvalidConstructorArguments() {
+        if (description == null || description.isEmpty()) {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                new Product(description, value, unit);
+            });
+            assertEquals("Description cannot be null or empty", exception.getMessage());
+        } else if (value == null || value < 0) {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                new Product(description, value, unit);
+            });
+            assertEquals("Value cannot be negative or null", exception.getMessage());
+        } else if (unit == null || unit.isEmpty()) {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                new Product(description, value, unit);
+            });
+            assertEquals("Unit cannot be null or empty", exception.getMessage());
+        }
+    }
 
     @Test
     public void testProductInstantiation() {
-        Product product = new Product("Product Description", 99.99, "kg");
+        Product product = new Product("Camisa Preta", 99.99, "kg");
 
         assertNotNull(product);
         assertNotNull(product.getCode());
-        assertEquals("Product Description", product.getDescription());
+        assertEquals("Camisa Preta", product.getDescription());
         assertEquals(Double.valueOf(99.99), product.getValue());
         assertEquals("kg", product.getUnit());
     }
 
     @Test
     public void testGettersAndSetters() {
-        Product product = new Product("Product Description", 99.99, "kg");
+        Product product = new Product("Tenis da Nike", 99.99, "kg");
 
-        UUID initialCode = product.getCode();
+        Integer initialCode = product.getCode();
 
-        product.setDescription("New Description");
-        assertEquals("New Description", product.getDescription());
+        product.setDescription("Tenis da Nike 2024");
+        assertEquals("Tenis da Nike 2024", product.getDescription());
 
         product.setValue(199.99);
         assertEquals(Double.valueOf(199.99), product.getValue());
@@ -36,107 +92,39 @@ public class ProductTest {
         product.setUnit("pcs");
         assertEquals("pcs", product.getUnit());
 
-        // Ensure the code (UUID) remains unchanged
         assertEquals(initialCode, product.getCode());
     }
 
     @Test
-    public void testNegativeValueInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product("Product Description", -10.0, "kg");
-        });
-        assertEquals("Value cannot be negative or null", exception.getMessage());
-    }
+    public void testInvalidSetterArguments() {
+        Product product = new Product("Garrafa Termica", 10.0, "kg");
 
-    @Test
-    public void testNullValueInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product("Product Description", null, "kg");
-        });
-        assertEquals("Value cannot be negative or null", exception.getMessage());
-    }
-
-    @Test
-    public void testNullValueInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setValue(null);
         });
         assertEquals("Value cannot be negative or null", exception.getMessage());
-    }
 
-    @Test
-    public void testNegativeValueInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setValue(-5.0);
         });
         assertEquals("Value cannot be negative or null", exception.getMessage());
-    }
 
-    @Test
-    public void testNullUnitInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product("Product Description", 10.0, null);
-        });
-        assertEquals("Unit cannot be null or empty", exception.getMessage());
-    }
-
-    @Test
-    public void testEmptyUnitInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product("Product Description", 10.0, "");
-        });
-        assertEquals("Unit cannot be null or empty", exception.getMessage());
-    }
-
-    @Test
-    public void testNullUnitInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setUnit(null);
         });
         assertEquals("Unit cannot be null or empty", exception.getMessage());
-    }
 
-    @Test
-    public void testEmptyUnitInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setUnit("");
         });
         assertEquals("Unit cannot be null or empty", exception.getMessage());
-    }
 
-    @Test
-    public void testNullDescriptionInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product(null, 10.0, "kg");
-        });
-        assertEquals("Description cannot be null or empty", exception.getMessage());
-    }
-
-    @Test
-    public void testEmptyDescriptionInConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Product("", 10.0, "kg");
-        });
-        assertEquals("Description cannot be null or empty", exception.getMessage());
-    }
-
-    @Test
-    public void testNullDescriptionInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setDescription(null);
         });
         assertEquals("Description cannot be null or empty", exception.getMessage());
-    }
 
-    @Test
-    public void testEmptyDescriptionInSetter() {
-        Product product = new Product("Product Description", 10.0, "kg");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        exception = assertThrows(IllegalArgumentException.class, () -> {
             product.setDescription("");
         });
         assertEquals("Description cannot be null or empty", exception.getMessage());
@@ -144,9 +132,9 @@ public class ProductTest {
 
     @Test
     public void testToString() {
-        Product product = new Product("Product Description", 99.99, "kg");
+        Product product = new Product("Smartwatch", 99.99, "kg");
         String expected = "code=" + product.getCode() +
-                ", description='Product Description'" +
+                ", description='Smartwatch'" +
                 ", value=99.99" +
                 ", unit='kg'" +
                 "\n";

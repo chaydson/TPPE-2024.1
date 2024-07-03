@@ -1,9 +1,8 @@
 package org.example.model;
 
-import java.util.UUID;
-
 public class Product {
-    private UUID code;
+    private static int nextCode = 0;
+    private Integer code;
     private String description;
     private Double value;
     private String unit;
@@ -18,13 +17,13 @@ public class Product {
         if (unit == null || unit.isEmpty()) {
             throw new IllegalArgumentException("Unit cannot be null or empty");
         }
-        this.code = UUID.randomUUID();
+        this.code = nextCode++;
         this.description = description;
         this.value = value;
         this.unit = unit;
     }
 
-    public UUID getCode() {
+    public Integer getCode() {
         return code;
     }
 
