@@ -33,21 +33,41 @@ public class PrimeCustomerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"John Doe", "12345678900", "555-1234", false, "john@example.com", new Address("Nordeste", true), 50.0},
-                {"Jane Doe", "98765432100", "555-5678", true, "jane@example.com", new Address("Norte", false), 100.0}
+                {"John Doe", "12345678900", "555-1234", false, "john@example.com", new Address("Centro Oeste", true), 10.0},
+                {"Jane Doe", "98765432100", "555-5678", true, "jane@example.com", new Address("Distrito Federal", false), 20.0}
         });
     }
 
     @Test
     public void testPrimeCustomerCreation() {
-        PrimeCustomer customer = new PrimeCustomer(name, cpf, phone, special, email, address, cashback);
-        assertEquals(name, customer.getName());
-        assertEquals(cpf, customer.getCpf());
-        assertEquals(phone, customer.getPhone());
-        assertEquals(special, customer.isSpecial());
-        assertEquals(email, customer.getEmail());
-        assertEquals(address, customer.getAddress());
-        assertEquals(cashback, customer.getCashback(), 0.01); // Using delta for double comparison
+        PrimeCustomer primeCustomer = new PrimeCustomer(name, cpf, phone, special, email, address, cashback);
+        assertEquals(name, primeCustomer.getName());
+        assertEquals(cpf, primeCustomer.getCpf());
+        assertEquals(phone, primeCustomer.getPhone());
+        assertEquals(special, primeCustomer.isSpecial());
+        assertEquals(email, primeCustomer.getEmail());
+        assertEquals(address, primeCustomer.getAddress());
+        assertEquals(cashback, primeCustomer.getCashback(), 0);
+    }
+
+    @Test
+    public void testSetCashback() {
+        PrimeCustomer primeCustomer = new PrimeCustomer(name, cpf, phone, special, email, address, cashback);
+        double newCashback = 30.0;
+        primeCustomer.setCashback(newCashback);
+        assertEquals(newCashback, primeCustomer.getCashback(), 0);
+    }
+
+    @Test
+    public void testToString() {
+        PrimeCustomer primeCustomer = new PrimeCustomer(name, cpf, phone, special, email, address, cashback);
+        String expectedString = "Name: " + name +
+                ", CPF: " + cpf +
+                ", Phone: " + phone +
+                ", Special: " + special +
+                ", Email: " + email +
+                "\n, Cashback: " + cashback +
+                "\n";
+        assertEquals(expectedString, primeCustomer.toString());
     }
 }
-
