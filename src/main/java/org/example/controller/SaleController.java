@@ -40,6 +40,9 @@ public class SaleController {
                     itens.add(p);
                 }
             }
+            System.out.println("Do you want to add another product? (y/n)");
+            String answer = scanner.nextLine();
+            if (answer.equals("n")) { insertingProduct = false; }
         }
 
         System.out.println("Enter Payment Method:");
