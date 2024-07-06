@@ -1,4 +1,4 @@
-package org.example.controller.sale;
+package org.example.controller;
 
 import org.example.model.Customer;
 import org.example.model.PrimeCustomer;
@@ -83,18 +83,25 @@ public class SaleController {
     }
 
     public double calculateShipping(boolean isCapital, String region, Customer customer) {
+
         if (customer instanceof PrimeCustomer) {
             return 0.0;
-        } else {
-            return switch (region) {
-                case "Distrito Federal" -> isCapital ? 5.0 : 0.0;
-                case "Centro-oeste", "Sul" -> isCapital ? 10.0 : 13.0;
-                case "Nordeste" -> isCapital ? 15.0 : 18.0;
-                case "Norte" -> isCapital ? 20.0 : 15.0;
-                case "Sudeste" -> isCapital ? 7.0 : 10.0;
-                default -> 0.0;
-            };
         }
+
+        double shippingPrice = switch (region) {
+            case "Distrito Federal" -> isCapital ? 5.0 : 0.0;
+            case "Centro-oeste", "Sul" -> isCapital ? 10.0 : 13.0;
+            case "Nordeste" -> isCapital ? 15.0 : 18.0;
+            case "Norte" -> isCapital ? 20.0 : 15.0;
+            case "Sudeste" -> isCapital ? 7.0 : 10.0;
+            default -> 0.0;
+        };
+
+        if (customer.isSpecial()) {
+            shippingPrice *= 0.7;
+        }
+
+        return shippingPrice;
     }
 
     public double[] calculateTaxes(String region){

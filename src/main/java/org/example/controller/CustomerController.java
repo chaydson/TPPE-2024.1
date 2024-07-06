@@ -1,4 +1,4 @@
-package org.example.controller.sale;
+package org.example.controller;
 
 import org.example.model.Address;
 import org.example.model.Customer;

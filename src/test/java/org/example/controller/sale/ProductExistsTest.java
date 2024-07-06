@@ -1,5 +1,6 @@
 package org.example.controller.sale;
 
+import org.example.controller.SaleController;
 import org.example.model.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;

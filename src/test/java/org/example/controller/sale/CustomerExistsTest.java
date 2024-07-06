@@ -1,4 +1,5 @@
 package org.example.controller.sale;
+import org.example.controller.SaleController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

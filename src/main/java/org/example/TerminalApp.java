@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.controller.sale.SaleController;
+import org.example.controller.SaleController;
 
 import java.util.*;
 
