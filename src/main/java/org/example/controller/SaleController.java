@@ -8,6 +8,8 @@ import org.example.model.Sale;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SaleController {
     private static final Scanner scanner = new Scanner(System.in);
@@ -33,6 +35,14 @@ public class SaleController {
             cpf = scanner.nextLine();
         } while (!verifyCustomer(cpf));
 
+        Customer customer =  new Customer();
+
+        for (Customer c : customerController.getCustomers()) {
+            if (c.getCpf().equals(cpf)) {
+                customer = c;
+            }
+        }
+
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
             Integer product = scanner.nextInt();
@@ -57,16 +67,21 @@ public class SaleController {
             }
         }
 
-        System.out.println("Enter Payment Method:");
+        double discount = 0.0;
+        System.out.println("Enter the card number in the format XXXX XXXX XXXX XXXX:");
         String paymentMethod = scanner.nextLine();
-        System.out.println("Enter Discount:");
-        Integer discount = scanner.nextInt();
-
-        Customer customer =  new Customer();
-
-        for (Customer c : customerController.getCustomers()) {
-            if (c.getCpf().equals(cpf)) {
-                customer = c;
+        if (customer instanceof PrimeCustomer){
+            System.out.println(customer.getName() + " has " + String.format("%.2f", ((PrimeCustomer) customer).getCashback()) + " reais in cashback, do you want to use it as a discount? (y/n)");
+            String answer = scanner.nextLine();
+            if (answer.equals("y")) {
+                discount = ((PrimeCustomer) customer).getCashback();
+                for (Customer c : customerController.getCustomers()) {
+                    if (c.getCpf().equals(cpf)) {
+                        customerController.getCustomers().remove(c);
+                        ((PrimeCustomer) c).resetCashBack();
+                        customerController.getCustomers().add(c);
+                    }
+                }
             }
         }
 
@@ -74,12 +89,15 @@ public class SaleController {
         double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
         double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion(), customer);
 
-        double totalValue = calculateTotalValue(shipping, icmsTax, municipalTax);
+        double totalValue = calculateTotalValueAndCashBack(shipping, icmsTax, municipalTax, customer, paymentMethod);
 
         Sale sale = new Sale(date, customer, itens, paymentMethod, shipping, discount, icmsTax, municipalTax, totalValue);
 
         sales.add(sale);
         System.out.println("Sale created successfully");
+        insertingProduct = true;
+        count = 1;
+        itens = new ArrayList<>();
     }
 
     public double calculateShipping(boolean isCapital, String region, Customer customer) {
@@ -115,10 +133,16 @@ public class SaleController {
         return results;
     }
 
-    public double calculateTotalValue(double shipping, double icmsTax, double municipalTax){
+    public double calculateTotalValueAndCashBack(double shipping, double icmsTax, double municipalTax, Customer customer, String digits){
         double totalValue = 0;
 
         for (Product p : itens) { totalValue += p.getValue(); }
+
+        if(customer instanceof PrimeCustomer){
+            double cashbackByReal = isCompanyCard(digits) ? 0.05 : 0.03;
+            double cashback = totalValue * cashbackByReal;
+            ((PrimeCustomer) customer).setCashback(cashback);
+        }
 
         totalValue = (icmsTax * totalValue) + (municipalTax * totalValue) + shipping + totalValue;
 
@@ -132,6 +156,17 @@ public class SaleController {
             }
         }
         return false;
+    }
+
+    public static boolean isCompanyCard(String input) {
+        // Expressão regular para corresponder ao formato 4296 13XX XXXX XXXX
+        String regex = "^4296 13\\d{2} \\d{4} \\d{4}$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(input);
+
+        return matcher.matches();
     }
 
     public Product checkProduct(Integer productId) {

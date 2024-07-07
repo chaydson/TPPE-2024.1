@@ -15,7 +15,11 @@ public class PrimeCustomer extends Customer{
     }
 
     public void setCashback(double cashback) {
-        this.cashback = cashback;
+        this.cashback += cashback;
+    }
+
+    public void resetCashBack(){
+        this.cashback = 0.0;
     }
 
     @Override

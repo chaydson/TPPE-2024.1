@@ -10,12 +10,12 @@ public class Sale {
     private List<Product> itens;
     private String paymentMethod;
     private Double shipment;
-    private Integer discount;
+    private double discount;
     private double taxICMS;
     private double taxMunicipal;
     private Double total;
 
-    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Integer discount, double taxICMS, double taxMunicipal, Double total) {
+    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Double discount, double taxICMS, double taxMunicipal, Double total) {
         this.code = UUID.randomUUID();
         this.date = date;
         this.customer = customer;
@@ -76,11 +76,11 @@ public class Sale {
         this.shipment = shipment;
     }
 
-    public Integer getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 
