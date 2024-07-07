@@ -1,5 +1,7 @@
 package org.example.model;
 
+import java.util.List;
+
 public class Customer {
     private String name;
     private String cpf; // @id
@@ -7,6 +9,8 @@ public class Customer {
     private boolean special;
     private String email;
     private Address address;
+    private List<Sale> purchasesHistoric;
+
 
     public Customer() {}
 
@@ -18,6 +22,16 @@ public class Customer {
         this.special = special;
         this.email = email;
         this.address = address;
+    }
+
+    public Customer(String name, String cpf, String phone, boolean special, String email, Address address, List<Sale> purchasesHistoric) {
+        this.name = name;
+        this.cpf = cpf;
+        this.phone = phone;
+        this.special = special;
+        this.email = email;
+        this.address = address;
+        this.purchasesHistoric = purchasesHistoric;
     }
 
     // Getters and Setters
@@ -69,13 +83,24 @@ public class Customer {
         this.address = address;
     }
 
+    public List<Sale> getPurchasesHistoric() {
+        return purchasesHistoric;
+    }
+
+    public void setPurchasesHistoric(List<Sale> purchasesHistoric) {
+        this.purchasesHistoric = purchasesHistoric;
+    }
+
     @Override
     public String toString() {
-        return "Name: " + name +
-                ", CPF: " + cpf +
-                ", Phone: " + phone +
-                ", Special: " + special +
-                ", Email: " + email +
-                "\n";
+        return "Customer{" +
+                "name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", phone='" + phone + '\'' +
+                ", special=" + special +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", purchasesHistoric=" + purchasesHistoric +
+                '}';
     }
 }

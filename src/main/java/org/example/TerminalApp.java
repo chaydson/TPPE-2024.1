@@ -19,7 +19,8 @@ public class TerminalApp {
             System.out.println("4. List Product");
             System.out.println("5. Create Sale");
             System.out.println("6. List Sale");
-            System.out.println("7. Exit");
+            System.out.println("7. Update Special Customers");
+            System.out.println("8. Exit");
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -42,9 +43,12 @@ public class TerminalApp {
                     saleController.createSale();
                     break;
                 case 6:
-                    System.out.println(saleController.getSales());;
+                    System.out.println(saleController.getSales());
                     break;
                 case 7:
+                    SaleController.isSpecialForAllCustomers();
+                    break;
+                case 8:
                     exit = true;
                     System.out.println("Exiting Terminal...");
                     break;

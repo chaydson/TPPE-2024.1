@@ -5,6 +5,7 @@ import org.example.model.PrimeCustomer;
 import org.example.model.Product;
 import org.example.model.Sale;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -69,7 +70,7 @@ public class SaleController {
 
         double discount = 0.0;
         System.out.println("Enter the card number in the format XXXX XXXX XXXX XXXX:");
-        String paymentMethod = scanner.nextLine();
+        String creditCardDigits = scanner.nextLine();
         if (customer instanceof PrimeCustomer){
             System.out.println(customer.getName() + " has " + String.format("%.2f", ((PrimeCustomer) customer).getCashback()) + " reais in cashback, do you want to use it as a discount? (y/n)");
             String answer = scanner.nextLine();
@@ -89,11 +90,14 @@ public class SaleController {
         double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
         double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion(), customer);
 
-        double totalValue = calculateTotalValueAndCashBack(shipping, icmsTax, municipalTax, customer, paymentMethod);
+        double totalValue = calculateTotalValue(itens, shipping, icmsTax, municipalTax, customer, creditCardDigits);
 
-        Sale sale = new Sale(date, customer, itens, paymentMethod, shipping, discount, icmsTax, municipalTax, totalValue);
+        calculateCachBack(customer, creditCardDigits, totalValue);
+
+        Sale sale = new Sale(date, customer, itens, creditCardDigits, shipping, discount, icmsTax, municipalTax, totalValue);
 
         sales.add(sale);
+        customer.getPurchasesHistoric().add(sale);
         System.out.println("Sale created successfully");
         insertingProduct = true;
         count = 1;
@@ -133,20 +137,65 @@ public class SaleController {
         return results;
     }
 
-    public double calculateTotalValueAndCashBack(double shipping, double icmsTax, double municipalTax, Customer customer, String digits){
+    public static void isSpecialForAllCustomers() {
+        for (Customer c : customerController.getCustomers()) {
+            if (isSpecial(c)) { c.setSpecial(true); }
+        }
+        System.out.println("Successfully updated customers");
+    }
+
+    public static boolean isSpecial(Customer customer){
+        int previousMonth= LocalDate.now().minusMonths(1).getMonthValue();
+        int currentYear = LocalDate.now().getYear();
+
+        double pastMonthPurchases = 0;
+
+        String convertedMonth = previousMonth + "";
+        String convertedYear = currentYear + "";
+
+        if(convertedMonth.length() == 1){ convertedMonth = "0" + convertedMonth; }
+
+        for (Sale sale : customer.getPurchasesHistoric()){
+            if(sale.getDate().substring(3, 5).equals(convertedMonth) && convertedYear.equals(sale.getDate().substring(6))){
+                pastMonthPurchases += sale.getTotal();
+            }
+        }
+
+        return pastMonthPurchases > 100;
+    }
+
+    public double calculateDiscount(Customer customer, double totalValue, boolean isCompanyCard){
+        double discount = 0;
+
+        if(customer.isSpecial()){ discount = 0.1; }
+
+        if(customer.isSpecial() && isCompanyCard) { discount += 0.1; }
+
+        totalValue = totalValue -  totalValue * discount;
+
+        return totalValue;
+    }
+
+    public double calculateTotalValue(List<Product> itens, double shipping, double icmsTax, double municipalTax, Customer customer, String digits){
         double totalValue = 0;
 
         for (Product p : itens) { totalValue += p.getValue(); }
 
-        if(customer instanceof PrimeCustomer){
-            double cashbackByReal = isCompanyCard(digits) ? 0.05 : 0.03;
-            double cashback = totalValue * cashbackByReal;
-            ((PrimeCustomer) customer).setCashback(cashback);
-        }
-
         totalValue = (icmsTax * totalValue) + (municipalTax * totalValue) + shipping + totalValue;
 
+        totalValue = calculateDiscount(customer, totalValue, isCompanyCard(digits));
+
         return totalValue;
+    }
+
+    public void calculateCachBack(Customer customer, String digits, double totalValue) {
+        double cashback = 0;
+
+        if(customer instanceof PrimeCustomer){
+            double cashbackByReal = isCompanyCard(digits) ? 0.05 : 0.03;
+            cashback = totalValue * cashbackByReal;
+            ((PrimeCustomer) customer).setCashback(cashback + ((PrimeCustomer) customer).getCashback());
+        }
     }
 
     public boolean verifyCustomer(String cpf){
@@ -160,13 +209,16 @@ public class SaleController {
 
     public static boolean isCompanyCard(String input) {
         // Expressão regular para corresponder ao formato 4296 13XX XXXX XXXX
-        String regex = "^4296 13\\d{2} \\d{4} \\d{4}$";
+        if(input != null && !input.isEmpty()) {
+            String regex = "^4296 13\\d{2} \\d{4} \\d{4}$";
 
-        Pattern pattern = Pattern.compile(regex);
+            Pattern pattern = Pattern.compile(regex);
 
-        Matcher matcher = pattern.matcher(input);
+            Matcher matcher = pattern.matcher(input);
 
-        return matcher.matches();
+            return matcher.matches();
+        }
+        return false;
     }
 
     public Product checkProduct(Integer productId) {
