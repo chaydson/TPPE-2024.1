@@ -1,7 +1,9 @@
 package org.example.controller.sale;
 
 import org.example.controller.SaleController;
+import org.example.controller.ProductController;
 import org.example.model.Product;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -17,10 +19,19 @@ public class ProductExistsTest {
 
     private final Integer productId;
     private final String expectedProductName;
+    private SaleController saleController;
 
     public ProductExistsTest(Integer productId, String expectedProductName) {
         this.productId = productId;
         this.expectedProductName = expectedProductName;
+    }
+
+    @Before
+    public void setUp() {
+        saleController = new SaleController();
+        ProductController productController = new ProductController();
+        SaleController.productController.getProducts().clear();
+        SaleController.productController.getProducts().addAll(productController.getProducts());
     }
 
     @Parameterized.Parameters
@@ -44,9 +55,8 @@ public class ProductExistsTest {
 
     @Test
     public void testCheckProduct() {
-        SaleController saleController = new SaleController();
         Product product = saleController.checkProduct(productId);
-        if (expectedProductName != null) {
+        if (expectedProductName != null && product != null) {
             assertEquals(expectedProductName, product.getDescription());
         } else {
             assertNull(product);
