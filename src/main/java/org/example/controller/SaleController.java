@@ -25,22 +25,63 @@ public class SaleController {
 
     public void createSale() {
         System.out.println("Creating Sale...");
+        String date = getDateFromUser();
+        Customer customer = getCustomerFromUser();
+        getProductsFromUser();
+        double discount = getDiscountFromUser(customer);
+        String creditCardDigits = getCreditCardFromUser();
+
+        double icmsTax = calculateTaxes(customer.getAddress().getRegion())[0];
+        double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
+        double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion(), customer);
+
+        double totalValue = calculateTotalValue(itens, shipping, icmsTax, municipalTax, customer, creditCardDigits);
+
+        calculateCashBack(customer, creditCardDigits, totalValue);
+
+        Tax tax = new Tax(icmsTax, municipalTax);
+        SaleDetails firstSaleDetail = new SaleDetails(discount, tax, totalValue, shipping);
+        Sale sale = new Sale(date, customer, itens, creditCardDigits, firstSaleDetail);
+
+        sales.add(sale);
+        customer.getPurchasesHistoric().add(sale);
+        System.out.println("Sale created successfully");
+        resetSaleProcess();
+    }
+
+    public void calculateCashBack(Customer customer, String digits, double totalValue) {
+        double cashback = 0;
+
+        if (customer instanceof PrimeCustomer) {
+            double cashbackByReal = isCompanyCard(digits) ? 0.05 : 0.03;
+            cashback = totalValue * cashbackByReal;
+            ((PrimeCustomer) customer).setCashback(cashback + ((PrimeCustomer) customer).getCashback());
+        }
+    }
+
+    private String getDateFromUser() {
         System.out.println("Enter the sale date in the format dd/MM/yyyy");
-        String date = scanner.nextLine();
+        return scanner.nextLine();
+    }
+
+    private Customer getCustomerFromUser() {
         String cpf;
         do {
             System.out.println("Enter customer CPF:");
             cpf = scanner.nextLine();
         } while (!verifyCustomer(cpf));
 
-        Customer customer =  new Customer();
+        Customer customer = new Customer();
 
         for (Customer c : customerController.getCustomers()) {
             if (c.getCpf().equals(cpf)) {
                 customer = c;
             }
         }
+        return customer;
+    }
 
+    private void getProductsFromUser() {
         while (insertingProduct) {
             System.out.println("Enter the " + count + "º Product Code:");
             Integer product = scanner.nextInt();
@@ -64,17 +105,17 @@ public class SaleController {
                 System.out.println("You must add at least one product.");
             }
         }
+    }
 
+    private double getDiscountFromUser(Customer customer) {
         double discount = 0.0;
-        System.out.println("Enter the card number in the format XXXX XXXX XXXX XXXX:");
-        String creditCardDigits = scanner.nextLine();
-        if (customer instanceof PrimeCustomer){
+        if (customer instanceof PrimeCustomer) {
             System.out.println(customer.getName() + " has " + String.format("%.2f", ((PrimeCustomer) customer).getCashback()) + " reais in cashback, do you want to use it as a discount? (y/n)");
             String answer = scanner.nextLine();
             if (answer.equals("y")) {
                 discount = ((PrimeCustomer) customer).getCashback();
                 for (Customer c : customerController.getCustomers()) {
-                    if (c.getCpf().equals(cpf)) {
+                    if (c.getCpf().equals(customer.getCpf())) {
                         customerController.getCustomers().remove(c);
                         ((PrimeCustomer) c).resetCashBack();
                         customerController.getCustomers().add(c);
@@ -82,23 +123,15 @@ public class SaleController {
                 }
             }
         }
+        return discount;
+    }
 
-        double icmsTax = calculateTaxes(customer.getAddress().getRegion())[0];
-        double municipalTax = calculateTaxes(customer.getAddress().getRegion())[1];
-        double shipping = calculateShipping(customer.getAddress().isCapital(), customer.getAddress().getRegion(), customer);
+    private String getCreditCardFromUser() {
+        System.out.println("Enter the card number in the format XXXX XXXX XXXX XXXX:");
+        return scanner.nextLine();
+    }
 
-        double totalValue = calculateTotalValue(itens, shipping, icmsTax, municipalTax, customer, creditCardDigits);
-
-        calculateCachBack(customer, creditCardDigits, totalValue);
-
-        Tax tax = new Tax(icmsTax, municipalTax);
-        SaleDetails saleDetails = new SaleDetails(discount, tax, totalValue, shipping);
-
-        Sale sale = new Sale(date, customer, itens, creditCardDigits, saleDetails);
-
-        sales.add(sale);
-        customer.getPurchasesHistoric().add(sale);
-        System.out.println("Sale created successfully");
+    private void resetSaleProcess() {
         insertingProduct = true;
         count = 1;
         itens = new ArrayList<>();

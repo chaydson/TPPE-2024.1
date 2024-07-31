@@ -1,5 +1,6 @@
 package org.example.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
@@ -9,7 +10,7 @@ public class Customer {
     private boolean special;
     private String email;
     private Address address;
-    private List<Sale> purchasesHistoric;
+    private List<Sale> purchasesHistoric = new ArrayList<>();
 
 
     public Customer() {}
@@ -100,7 +101,7 @@ public class Customer {
                 ", special=" + special +
                 ", email='" + email + '\'' +
                 ", address=" + address +
-                ", purchasesHistoric=" + purchasesHistoric +
+                ", purchasesHistoric size=" + purchasesHistoric.size() +
                 '}';
     }
 }

@@ -111,7 +111,7 @@ public class CustomerTest {
                 ", special=" + special +
                 ", email='" + email + '\'' +
                 ", address=" + address +
-                ", purchasesHistoric=" + purchasesHistoric +
+                ", purchasesHistoric size=" + purchasesHistoric.size() +
                 '}';
         assertEquals(expectedString, customer.toString());
     }

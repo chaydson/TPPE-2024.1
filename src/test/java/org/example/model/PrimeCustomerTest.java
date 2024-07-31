@@ -73,7 +73,7 @@ public class PrimeCustomerTest {
                 ", special=" + special +
                 ", email='" + email + '\'' +
                 ", address=" + address +
-                ", purchasesHistoric=" + purchasesHistoric +
+                ", purchasesHistoric size=" + purchasesHistoric.size() +
                 "}, Cashback: " + cashback + "\n";
         assertEquals(expectedString, customer.toString());
     }
