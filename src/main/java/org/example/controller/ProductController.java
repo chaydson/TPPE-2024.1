@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.Product;
+import org.example.util.ProductCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +31,7 @@ public class ProductController {
     }
 
     public void createProduct() {
-        System.out.println("\nCreating Product...");
-        System.out.print("Enter customer description for product: ");
-        String description = scanner.nextLine();
-        System.out.print("Enter product value: ");
-        Double value = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.print("Enter customer unit: ");
-        String unit = scanner.nextLine();
-
-        Product product = new Product(description, value, unit);
-
-        products.add(product);
-        System.out.println("Product created successfully");
+        ProductCreator creator = new ProductCreator(scanner, products);
+        creator.createProduct();
     }
 }
