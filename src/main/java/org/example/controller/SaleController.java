@@ -1,9 +1,6 @@
 package org.example.controller;
 
-import org.example.model.Customer;
-import org.example.model.PrimeCustomer;
-import org.example.model.Product;
-import org.example.model.Sale;
+import org.example.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -94,7 +91,10 @@ public class SaleController {
 
         calculateCachBack(customer, creditCardDigits, totalValue);
 
-        Sale sale = new Sale(date, customer, itens, creditCardDigits, shipping, discount, icmsTax, municipalTax, totalValue);
+        Tax tax = new Tax(icmsTax, municipalTax);
+        SaleDetails saleDetails = new SaleDetails(discount, tax, totalValue, shipping);
+
+        Sale sale = new Sale(date, customer, itens, creditCardDigits, saleDetails);
 
         sales.add(sale);
         customer.getPurchasesHistoric().add(sale);
@@ -157,7 +157,7 @@ public class SaleController {
 
         for (Sale sale : customer.getPurchasesHistoric()){
             if(sale.getDate().substring(3, 5).equals(convertedMonth) && convertedYear.equals(sale.getDate().substring(6))){
-                pastMonthPurchases += sale.getTotal();
+                pastMonthPurchases += sale.getSaleDetails().getTotal();
             }
         }
 

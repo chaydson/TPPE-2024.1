@@ -1,9 +1,7 @@
 package org.example.controller.sale;
 
 import org.example.controller.SaleController;
-import org.example.model.Address;
-import org.example.model.Customer;
-import org.example.model.Sale;
+import org.example.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -28,16 +26,23 @@ public class IsSpecialTest {
     public static Collection<Object[]> data() {
         Address address = new Address("Sample Region", true);
 
+        Tax tax = new Tax(0, 0);
+
+        SaleDetails firstSaleDetail = new SaleDetails(0.0, tax, 110.0, 10.0);
+        SaleDetails secondSaleDetail = new SaleDetails(0.0, tax, 95.0, 5.0);
+        SaleDetails thirdSaleDetail = new SaleDetails(0.0, tax, 90.0, 10.0);
+        SaleDetails fourthSaleDetail = new SaleDetails(0.0, tax, 95.0, 5.0);
+
         // Sample purchases for a special customer
         List<Sale> purchasesOver100 = Arrays.asList(
-                new Sale("01/06/2024", null, null, "Credit Card", 10.0, 0.0, 0, 0, 110.0),
-                new Sale("02/05/2024", null, null, "Debit Card", 5.0, 0.0, 0, 0, 95.0)
+                new Sale("01/06/2024", null, null, "Credit Card", firstSaleDetail),
+                new Sale("02/05/2024", null, null, "Debit Card", secondSaleDetail)
         );
 
         // Sample purchases for a non-special customer
         List<Sale> purchasesUnder100 = Arrays.asList(
-                new Sale("01/06/2024", null, null, "Credit Card", 10.0, 0.0, 0, 0, 90.0),
-                new Sale("02/05/2024", null, null, "Debit Card", 5.0, 0.0, 0, 0, 95.0)
+                new Sale("01/06/2024", null, null, "Credit Card", thirdSaleDetail),
+                new Sale("02/05/2024", null, null, "Debit Card", fourthSaleDetail)
         );
 
         // Create test cases

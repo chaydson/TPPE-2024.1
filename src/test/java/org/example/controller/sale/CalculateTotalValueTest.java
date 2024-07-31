@@ -4,7 +4,6 @@ import org.example.controller.SaleController;
 import org.example.model.Address;
 import org.example.model.Customer;
 import org.example.model.Product;
-import org.example.model.Sale;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

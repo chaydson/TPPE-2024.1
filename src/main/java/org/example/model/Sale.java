@@ -9,23 +9,14 @@ public class Sale {
     private Customer customer;
     private List<Product> itens;
     private String paymentMethod;
-    private Double shipment;
-    private double discount;
-    private double taxICMS;
-    private double taxMunicipal;
-    private Double total;
+    private SaleDetails saleDetails;
 
-    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, Double shipment, Double discount, double taxICMS, double taxMunicipal, Double total) {
-        this.code = UUID.randomUUID();
+    public Sale(String date, Customer customer, List<Product> itens, String paymentMethod, SaleDetails saleDetails) {
         this.date = date;
         this.customer = customer;
         this.itens = itens;
         this.paymentMethod = paymentMethod;
-        this.shipment = shipment;
-        this.discount = discount;
-        this.taxICMS = taxICMS;
-        this.taxMunicipal = taxMunicipal;
-        this.total = total;
+        this.saleDetails = saleDetails;
     }
 
     public UUID getCode() {
@@ -68,44 +59,12 @@ public class Sale {
         this.paymentMethod = paymentMethod;
     }
 
-    public Double getShipment() {
-        return shipment;
+    public SaleDetails getSaleDetails() {
+        return saleDetails;
     }
 
-    public void setShipment(Double shipment) {
-        this.shipment = shipment;
-    }
-
-    public Double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Double discount) {
-        this.discount = discount;
-    }
-
-    public double getTaxICMS() {
-        return taxICMS;
-    }
-
-    public void setTaxICMS(int taxICMS) {
-        this.taxICMS = taxICMS;
-    }
-
-    public double getTaxMunicipal() {
-        return taxMunicipal;
-    }
-
-    public void setTaxMunicipal(int taxMunicipal) {
-        this.taxMunicipal = taxMunicipal;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
+    public void setSaleDetails(SaleDetails saleDetails) {
+        this.saleDetails = saleDetails;
     }
 
     @Override
@@ -116,11 +75,7 @@ public class Sale {
                 ", customer=" + customer +
                 ", itens=" + itens +
                 ", paymentMethod='" + paymentMethod + '\'' +
-                ", shipment=" + shipment +
-                ", discount=" + discount +
-                ", taxICMS=" + taxICMS +
-                ", taxMunicipal=" + taxMunicipal +
-                ", total=" + total +
+                ", saleDetails=" + saleDetails +
                 '}';
     }
 }
